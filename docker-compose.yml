@@ -1,0 +1,11 @@
+services:
+
+  postgres:
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - DATABASE_HOST=localhost
+      - POSTGRES_USER=price_history
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_DB=price_history_db

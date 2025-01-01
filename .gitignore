@@ -1,0 +1,36 @@
+# Node.js
+node_modules/
+
+# Directorios de compilación
+dist/
+build/
+
+# Archivos de dependencias instaladas globalmente
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Archivos de entorno
+.env
+.env.local
+.env.*.local
+
+# Archivos de configuración del sistema
+.vscode/
+.idea/
+
+# Archivos de pruebas y cobertura de pruebas
+coverage/
+
+# Archivos de backup
+*.bak
+*.swp
+*.swo
+
+# Archivos de precompilación de TypeScript
+*.tsbuildinfo
+
+# Archivos generados por el sistema
+.DS_Store
+Thumbs.db
+pgdata/
