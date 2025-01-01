@@ -7,6 +7,9 @@
     "start:local": "tsnd --respawn --transpile-only --env-file=.env ./src/server.ts",
     "start:prod": "tsnd --respawn --transpile-only --env-file=.env.prod ./src/server.ts"
   },
+  "repository": {
+    "url": "https://github.com/rosalesponcerdev/rp-price-history-back"
+  },
   "author": "Renzo Rosales",
   "description": "",
   "dependencies": {
