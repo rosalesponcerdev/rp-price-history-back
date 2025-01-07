@@ -1,33 +1,56 @@
-import { DeleteResult, UpdateResult } from 'typeorm';
+import { Prisma, Product } from '@prisma/client';
 import { BaseService } from '../../config/base.service';
-import { ProductDTO } from '../dto/product.dto';
+import { Service } from '../../interfaces/service.interface';
 
-import { ProductEntity } from '../entities/product.entity';
-
-export class ProductService extends BaseService<ProductEntity> {
+export class ProductService
+  extends BaseService<Prisma.ProductDelegate>
+  implements Service<Product>
+{
   constructor() {
-    super(ProductEntity);
+    super('product');
   }
 
-  async getAll(): Promise<ProductEntity[]> {
-    return this.execRepository.find();
+  async getAll(): Promise<Product[]> {
+    return this.execRepository.findMany();
   }
 
-  async find(id: string): Promise<ProductEntity | null> {
-    return this.execRepository.findOne({
+  async find(id: string): Promise<Product | null> {
+    return this.execRepository.findUnique({
       where: { id },
     });
   }
 
-  async create(body: ProductDTO): Promise<ProductEntity> {
-    return this.execRepository.save(body);
+  async create(product: Product): Promise<Product> {
+    const { name, price, quantity, unit } = product;
+
+    const data = Prisma.validator<Prisma.ProductCreateInput>()({
+      name,
+      price,
+      quantity,
+      unit,
+    });
+
+    console.log(data);
+
+    return this.execRepository.create({
+      data,
+    });
   }
 
-  async delete(id: string): Promise<DeleteResult> {
-    return this.execRepository.delete({ id });
+  async delete(id: string): Promise<Product> {
+    return this.execRepository.delete({
+      where: {
+        id,
+      },
+    });
   }
 
-  async update(id: string, update: ProductDTO): Promise<UpdateResult> {
-    return this.execRepository.update({ id }, update);
+  async update(id: string, data: Product): Promise<Product> {
+    return this.execRepository.update({
+      data,
+      where: {
+        id,
+      },
+    });
   }
 }

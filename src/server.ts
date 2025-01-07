@@ -3,7 +3,7 @@ import morgan from 'morgan';
 import cors from 'cors';
 
 import { ConfigServer } from './config/config';
-import { UserRouter } from './user/user.router';
+
 import { ProductRouter } from './product/product.router';
 
 class ServerBootstrap extends ConfigServer {
@@ -27,12 +27,12 @@ class ServerBootstrap extends ConfigServer {
   }
 
   routers(): Array<express.Router> {
-    return [new UserRouter().router, new ProductRouter().router];
+    return [new ProductRouter().router];
   }
 
-  private async initializeConnection() {
+  private initializeConnection() {
     try {
-      await this.dbConnect().initialize();
+      this.dbConnect();
     } catch (error) {
       console.error(error);
     }
