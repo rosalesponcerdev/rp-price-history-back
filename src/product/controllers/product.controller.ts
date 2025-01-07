@@ -14,12 +14,6 @@ export class ProductController implements BaseController {
     try {
       const data = await this._productSrv.getAll();
 
-      if (data.length === 0) {
-        this._httpResponse.NotFound(res, 'Not Exist');
-
-        return;
-      }
-
       this._httpResponse.OK(res, data);
     } catch (error) {
       console.error(error);

@@ -16,9 +16,9 @@ export abstract class DbConnection {
 
   private static dbConnect(): PrismaClient {
     const libsql = createClient({
-      // url: EnvironmentUtil.getEnvironment('TURSO_DATABASE_URL') as string,
-      // authToken: EnvironmentUtil.getEnvironment('TURSO_AUTH_TOKEN') as string,
-      url: `file:${__dirname}/../../prisma/dev.db`,
+      url: EnvironmentUtil.getEnvironment('TURSO_DATABASE_URL') as string,
+      authToken: EnvironmentUtil.getEnvironment('TURSO_AUTH_TOKEN') as string,
+      // url: `file:${__dirname}/../../prisma/dev.db`,
     });
 
     const adapter = new PrismaLibSQL(libsql);
