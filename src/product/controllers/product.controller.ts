@@ -1,19 +1,29 @@
 import { Request, Response } from 'express';
 import { BaseController } from '../../interfaces/base-controller.interface';
 import { ProductService } from '../service/product.service';
+import { HttpResponse } from '../../shared/response/http.response';
+import { Prisma } from '@prisma/client';
 
 export class ProductController implements BaseController {
   constructor(
     private readonly _productSrv: ProductService = new ProductService(),
+    private _httpResponse: HttpResponse = new HttpResponse(),
   ) {}
 
   async getAll(_req: Request, res: Response) {
     try {
       const data = await this._productSrv.getAll();
-      res.status(200).json(data);
+
+      if (data.length === 0) {
+        this._httpResponse.NotFound(res, 'Not Exist');
+
+        return;
+      }
+
+      this._httpResponse.OK(res, data);
     } catch (error) {
       console.error(error);
-      res.status(500).json(error);
+      this._httpResponse.Error(res, error);
     }
   }
 
@@ -22,10 +32,10 @@ export class ProductController implements BaseController {
 
     try {
       const data = await this._productSrv.find(id);
-      res.status(200).json(data);
+      this._httpResponse.OK(res, data);
     } catch (error) {
       console.error(error);
-      res.status(500);
+      this._httpResponse.Error(res, error);
     }
   }
 
@@ -33,10 +43,10 @@ export class ProductController implements BaseController {
     try {
       const data = await this._productSrv.create(req.body);
 
-      res.status(200).json(data);
+      this._httpResponse.OK(res, data);
     } catch (error) {
       console.error(error);
-      res.status(500).json(error);
+      this._httpResponse.Error(res, error);
     }
   }
 
@@ -46,10 +56,18 @@ export class ProductController implements BaseController {
     try {
       const data = await this._productSrv.update(id, req.body);
 
-      res.status(200).json(data);
+      this._httpResponse.OK(res, data);
     } catch (error) {
       console.error(error);
-      res.status(500).json(error);
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === 'P2025') {
+          this._httpResponse.NotFound(res, 'Product Not Found');
+
+          return;
+        }
+      }
+
+      this._httpResponse.Error(res, error);
     }
   }
 
@@ -58,10 +76,10 @@ export class ProductController implements BaseController {
     try {
       const data = await this._productSrv.delete(id);
 
-      res.status(200).json(data);
+      this._httpResponse.OK(res, data);
     } catch (error) {
       console.error(error);
-      res.status(500).json(error);
+      this._httpResponse.Error(res, error);
     }
   }
 }

@@ -5,7 +5,9 @@
   "scripts": {
     "build": "tsc --env-file=.env",
     "start:local": "tsnd --respawn --transpile-only --env-file=.env ./src/server.ts",
-    "start:prod": "tsnd --respawn --transpile-only --env-file=.env.prod ./src/server.ts"
+    "start:prod": "tsnd --respawn --transpile-only --env-file=.env.prod ./src/server.ts",
+    "prisma:db": "prisma db push",
+    "prisma:migrate": "prisma migrate dev"
   },
   "repository": {
     "url": "https://github.com/rosalesponcerdev/rp-price-history-back"
@@ -13,20 +15,21 @@
   "author": "Renzo Rosales",
   "description": "",
   "dependencies": {
-    "class-validator": "^0.14.1",
+    "@libsql/client": "^0.8.1",
+    "@prisma/adapter-libsql": "^6.1.0",
+    "@prisma/client": "^6.1.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "morgan": "^1.10.0",
-    "pg": "^8.13.1",
-    "typeorm": "^0.3.20",
-    "typeorm-naming-strategies": "^4.1.0"
+    "zod": "^3.24.1"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/morgan": "^1.9.9",
     "@types/node": "^22.10.2",
+    "prisma": "^6.1.0",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.7.2"
   }

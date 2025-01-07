@@ -1,19 +1,14 @@
-import { EntityTarget, ObjectLiteral, Repository } from 'typeorm';
-import { BaseEntity } from './base.entity';
 import { ConfigServer } from './config';
+import { PrismaClient } from '@prisma/client';
 
-export class BaseService<T extends BaseEntity> extends ConfigServer {
-  execRepository: Repository<T>;
+export class BaseService<T> extends ConfigServer {
+  execRepository!: T;
+  connection: PrismaClient;
 
-  constructor(private getEntity: EntityTarget<T>) {
+  constructor(repository: string) {
     super();
 
-    this.execRepository = this.initRepository(getEntity);
-  }
-
-  initRepository<T extends ObjectLiteral>(e: EntityTarget<T>): Repository<T> {
-    const getCon = this.dbConnect();
-
-    return getCon.getRepository(e);
+    this.connection = this.dbConnect();
+    this.execRepository = (this.connection as any)[repository] as T;
   }
 }

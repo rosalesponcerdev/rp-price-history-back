@@ -1,4 +1,3 @@
-import { DataSource } from 'typeorm';
 import { DbConnection } from './db';
 import { EnvironmentUtil } from './env.util';
 
@@ -13,7 +12,7 @@ export abstract class ConfigServer {
     return EnvironmentUtil.getNumberEnv(key);
   }
 
-  dbConnect(): DataSource {
+  dbConnect() {
     return DbConnection.instance;
   }
 }

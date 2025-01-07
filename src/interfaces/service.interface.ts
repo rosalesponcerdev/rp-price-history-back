@@ -1,6 +1,4 @@
-import { DeleteResult, UpdateResult } from 'typeorm';
-
-export interface Service<T, K> {
+export interface Service<T, K = T> {
   //CREATE
   create(body: K): Promise<T>;
 
@@ -9,8 +7,8 @@ export interface Service<T, K> {
   getAll(): Promise<T[]>;
 
   //DELETE
-  delete(id: string): Promise<DeleteResult>;
+  delete(id: string): Promise<T>;
 
   //UPDATE
-  update(id: string, update: K): Promise<UpdateResult>;
+  update(id: string, update: K): Promise<T>;
 }

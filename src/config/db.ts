@@ -1,12 +1,12 @@
-import { DataSource, DataSourceOptions } from 'typeorm';
-
-import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { EnvironmentUtil } from './env.util';
+import { createClient } from '@libsql/client';
+import { PrismaLibSQL } from '@prisma/adapter-libsql';
+import { PrismaClient } from '@prisma/client';
 
 export abstract class DbConnection {
-  private static _connection: DataSource | undefined;
+  private static _connection: PrismaClient | undefined;
 
-  static get instance(): DataSource {
+  static get instance(): PrismaClient {
     if (DbConnection._connection) return DbConnection._connection;
 
     DbConnection._connection = this.dbConnect();
@@ -14,23 +14,15 @@ export abstract class DbConnection {
     return DbConnection._connection;
   }
 
-  private static dbConnect(): DataSource {
-    return new DataSource(this.TypeORMConfig);
-  }
+  private static dbConnect(): PrismaClient {
+    const libsql = createClient({
+      // url: EnvironmentUtil.getEnvironment('TURSO_DATABASE_URL') as string,
+      // authToken: EnvironmentUtil.getEnvironment('TURSO_AUTH_TOKEN') as string,
+      url: `file:${__dirname}/../../prisma/dev.db`,
+    });
 
-  static get TypeORMConfig(): DataSourceOptions {
-    return {
-      type: 'postgres',
-      host: EnvironmentUtil.getEnvironment('DATABASE_HOST'),
-      port: EnvironmentUtil.getNumberEnv('DB_PORT'),
-      username: EnvironmentUtil.getEnvironment('POSTGRES_USER'),
-      password: EnvironmentUtil.getEnvironment('POSTGRES_PASSWORD'),
-      database: EnvironmentUtil.getEnvironment('POSTGRES_DB'),
-      entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-      migrations: [__dirname + '/../../migrations/*{.ts,.js}'],
-      logging: false,
-      namingStrategy: new SnakeNamingStrategy(),
-      synchronize: true,
-    };
+    const adapter = new PrismaLibSQL(libsql);
+
+    return new PrismaClient({ adapter });
   }
 }

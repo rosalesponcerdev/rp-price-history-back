@@ -1,16 +1,8 @@
-import { IsNotEmpty } from 'class-validator';
-import { BaseDTO } from '../../config/base.dto';
+import { z } from 'zod';
 
-export class ProductDTO extends BaseDTO {
-  @IsNotEmpty()
-  name!: string;
-
-  @IsNotEmpty()
-  price!: number;
-
-  @IsNotEmpty()
-  quantity!: number;
-
-  @IsNotEmpty()
-  unit!: string;
-}
+export const ProductDto = z.object({
+  name: z.string(),
+  price: z.number(),
+  quantity: z.number(),
+  unit: z.string(),
+});
